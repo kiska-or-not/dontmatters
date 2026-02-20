@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">Проверка статуса</h2>
+<form class="card card-body" method="post">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-6">
+      <label class="form-label">Код заявки</label>
+      <input class="form-control" name="code" required style="text-transform:uppercase">
+    </div>
+    <div class="col-md-6">
+      <button class="btn btn-primary" type="submit">Показать</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
