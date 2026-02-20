@@ -14,10 +14,10 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
+
+    from . import models  # noqa
     with app.app_context():
         db.create_all()
-    from . import models  # noqa
-
     from .views_client import bp as client_bp
     from .views_admin import bp as admin_bp
     app.register_blueprint(client_bp)
