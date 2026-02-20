@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h2 class="mb-2">Заявка принята</h2>
+    <p class="text-secondary mb-3">Сохраните код для проверки статуса.</p>
+    <div class="display-6 fw-semibold mb-3">{{ code }}</div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" href="{{ url_for('client.status_view', code=code) }}">Проверить статус</a>
+      <a class="btn btn-outline-secondary" href="{{ url_for('client.apply_get') }}">Новая заявка</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
