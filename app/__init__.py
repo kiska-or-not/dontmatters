@@ -14,7 +14,8 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
-
+    with app.app_context():
+        db.create_all()
     from . import models  # noqa
 
     from .views_client import bp as client_bp
@@ -24,7 +25,7 @@ def create_app():
 
     from .cli import init_db_command
     app.cli.add_command(init_db_command)
-
+    
     @app.get("/health")
     def health():
         return {"status": "ok"}
