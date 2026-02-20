@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+  <div>
+    <h2 class="mb-1">Заявка {{ app.public_code }}</h2>
+    <div class="text-secondary">{{ app.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.applications_list') }}">Назад</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="row g-2">
+          <div class="col-6 text-secondary">Тип</div>
+          <div class="col-6 fw-semibold">{% if app.kind=="settle" %}Заселение{% else %}Переселение{% endif %}</div>
+
+          <div class="col-6 text-secondary">ФИО</div>
+          <div class="col-6 fw-semibold">{{ app.student_name }}</div>
+
+          <div class="col-6 text-secondary">Группа</div>
+          <div class="col-6">{{ app.student_group or "—" }}</div>
+
+          <div class="col-6 text-secondary">Email</div>
+          <div class="col-6">{{ app.contact_email or "—" }}</div>
+
+          <div class="col-6 text-secondary">Телефон</div>
+          <div class="col-6">{{ app.contact_phone or "—" }}</div>
+
+          <div class="col-6 text-secondary">Желаемая комната</div>
+          <div class="col-6">{{ app.desired_room or "—" }}</div>
+
+          <div class="col-6 text-secondary">Статус</div>
+          <div class="col-6">
+            {% if app.status == "queued" %}<span class="badge text-bg-warning">в очереди</span>{% endif %}
+            {% if app.status == "rejected" %}<span class="badge text-bg-danger">отклонена</span>{% endif %}
+            {% if app.status == "completed" %}<span class="badge text-bg-success">выполнена</span>{% endif %}
+            {% if app.status not in ["queued","rejected","completed"] %}<span class="badge text-bg-secondary">{{ app.status }}</span>{% endif %}
+          </div>
+
+          <div class="col-12">
+            <div class="text-secondary">Комментарий</div>
+            <div>{{ app.reason or "—" }}</div>
+          </div>
+
+          {% if app.assigned_bed %}
+          <div class="col-12">
+            <div class="text-secondary">Назначено</div>
+            <div class="fw-semibold">Комната {{ app.assigned_bed.room.number }}, место {{ app.assigned_bed.label }}</div>
+          </div>
+          {% endif %}
+
+          {% if app.admin_note %}
+          <div class="col-12">
+            <div class="text-secondary">Примечание</div>
+            <div>{{ app.admin_note }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Действия</h5>
+
+        <form method="post" action="{{ url_for('admin.applications_approve', app_id=app.id) }}">
+          <div class="mb-3">
+            <label class="form-label">Свободное место</label>
+            <select class="form-select" name="bed_id" required>
+              <option value="" selected disabled>Выберите</option>
+              {% for b in free_beds %}
+                <option value="{{ b.id }}">Комната {{ b.room.number }}, место {{ b.label }}</option>
+              {% endfor %}
+            </select>
+            {% if not free_beds %}
+              <div class="form-text text-danger">Свободных мест нет</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Примечание</label>
+            <textarea class="form-control" name="admin_note" rows="3">{{ app.admin_note or "" }}</textarea>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-success" type="submit" {% if not free_beds %}disabled{% endif %}>Подтвердить и назначить</button>
+          </div>
+        </form>
+
+        <hr>
+
+        <form method="post" action="{{ url_for('admin.applications_reject', app_id=app.id) }}">
+          <div class="mb-3">
+            <label class="form-label">Причина отклонения</label>
+            <textarea class="form-control" name="admin_note" rows="3">{{ app.admin_note or "" }}</textarea>
+          </div>
+          <button class="btn btn-outline-danger" type="submit">Отклонить</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

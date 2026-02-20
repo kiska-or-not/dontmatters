@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+  <div>
+    <h2 class="mb-1">Админка</h2>
+    <div class="text-secondary">Комнаты, места, студенты и очередь заявок</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-primary" href="{{ url_for('admin.applications_list') }}">Очередь заявок</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('admin.occupancy') }}">Заселение</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card"><div class="card-body">
+      <div class="text-secondary">Комнаты</div>
+      <div class="display-6">{{ rooms }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card"><div class="card-body">
+      <div class="text-secondary">Места</div>
+      <div class="display-6">{{ beds }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card"><div class="card-body">
+      <div class="text-secondary">Свободно</div>
+      <div class="display-6">{{ free_beds }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card"><div class="card-body">
+      <div class="text-secondary">Студенты</div>
+      <div class="display-6">{{ students }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6">
+    <div class="card"><div class="card-body">
+      <h5 class="card-title">Управление</h5>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('admin.rooms_list') }}">Комнаты</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('admin.students_list') }}">Студенты</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('admin.applications_list') }}">Заявки</a>
+      </div>
+    </div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card"><div class="card-body">
+      <h5 class="card-title">Очередь</h5>
+      <p class="text-secondary mb-3">Заявок в очереди: <span class="fw-semibold">{{ queued }}</span></p>
+      <a class="btn btn-primary" href="{{ url_for('admin.applications_list', status='queued') }}">Открыть очередь</a>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
